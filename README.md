@@ -29,7 +29,7 @@ The Initial living cells will be read from the text file
 ## Implementation
 * Get input file name and no of generations as arguments
 * Load initial pattern of the grid from the input file
-* For Dask implementation - the grid will be splitted into a number of Dask Array and function will be used (**Map_Overlay**) to    share an identical block between splitted grids.  
+* **For Dask implementation** - the grid will be splitted into a number of Dask Array and function will be used (**Map_Overlay**)   to share an identical block between splitted grids.  
 * Aply the rules for the no of generations
 * Store the final grid in the output file
 
