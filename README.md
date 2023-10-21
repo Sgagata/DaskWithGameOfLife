@@ -36,6 +36,6 @@ The Initial living cells will be read from the text file
 ## Script Implementation Guideline
 To explore several benchmarks for grids, we have applied several scripts for this task. Some srcipts are in Python text file and some are in Jupyter Notebook.
 * **Jupyter Notebook** - Change the input and output file directory and put number of generations.
-* **Python Files for Dask** - To run python files you can follow (<file.py> <Input name with directory> <Output name and Saving Directory><number of iterations> <Chunk Size>) this in your terminal
-* **Python Files Without Dask** - To run python files you can follow (<file.py> <Input name with directory> <Output name and Saving Directory><number of iterations> <Chunk Size>) this in your terminal
+* **Python Files for Dask** - To run python files you can follow (<file.py> Input name with directory> Output name and Saving Directory> number of iterations> Chunk Size) this in your terminal
+* **Python Files Without Dask** - To run python files you can follow ((<file.py> Input name with directory> Output name and Saving Directory> number of iterations) this in your terminal
  
