@@ -3,6 +3,7 @@ import dask
 import numpy as np
 import dask.array as da
 from dask.distributed import Client
+from dask import delayed
 
 def main():
     try:
@@ -21,10 +22,13 @@ def main():
         chunk_size = int(sys.argv[4])
     except:
         sys.exit(f"Entered value is not a nuber {sys.argv[4]}") 
-        
+    
+    dask.config.set(scheduler='processes')
+    client = Client()   
     board = read_input_file(input_name, chunk_size)
     final_board = play_game(board, n)
     write_output_file(output_name, final_board)
+    client.shutdown()
           
 def read_input_file(input_file, chunk_size):
     # initialize board
@@ -39,7 +43,6 @@ def read_input_file(input_file, chunk_size):
         dask_board = da.from_array(board, chunks=(chunk_size, chunk_size))
     return dask_board
                 
-
 def write_output_file(output, board):
     w = board.shape[0]
     h = board.shape[1]
@@ -54,7 +57,6 @@ def write_output_file(output, board):
         f.write(str(cell[0])+ " "+ str(cell[1])+ "\n")
     f.close()
     
-
 def neighbors_number(board, row, col):
     # add plus two to create a proper iteration
     neighbors = board[max(0, row-1):min(board.shape[0], row+2), max(0, col-1):min(board.shape[1], col+2)]
@@ -80,9 +82,6 @@ def play_game(dask_board, iterations):
     final_board = dask_board.compute()
     return final_board
 
-
                            
 if __name__ == "__main__":
-    client = Client(n_workers=6, threads_per_worker=4, processes=True, memory_limit='2.5GB')
     main()
-    client.shutdown()
