@@ -38,4 +38,11 @@ To explore several benchmarks for grids, we have applied several scripts for thi
 * **Jupyter Notebook** - Change the input and output file directory and put number of generations.
 * **Python Files for Dask** - To run python files you can follow (<file.py> Input name with directory> Output name and Saving Directory> number of iterations> Chunk Size) this in your terminal
 * **Python Files Without Dask** - To run python files you can follow ((<file.py> Input name with directory> Output name and Saving Directory> number of iterations) this in your terminal
- 
+
+## Files and Folder Description
+* **Data** - Contains the data used for the input
+* **Executables** - Contains the Python scripts which can be executable through Terminal
+* **Experiments** - Contains all the grid and method experiment scripts
+* **Images** - Contains Images of Timeprofilers and Dask Dashboards
+* **Output_Files** - Contains the output of the scrips
+* **Task_Report** - Contains the main report of the task as well as the experiment report.
