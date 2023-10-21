@@ -3,7 +3,7 @@ import dask
 import numpy as np
 import dask.array as da
 from dask.distributed import Client
-from dask import delayed
+from scipy.ndimage import convolve
 
 def main():
     try:
@@ -24,13 +24,18 @@ def main():
         sys.exit(f"Entered value is not a nuber {sys.argv[4]}") 
     
     dask.config.set(scheduler='processes')
-    client = Client()   
+    client = Client()  
+    #make a mask for counting the live neighbours
+    mask = da.ones((3,3))
+    #get rid from the middle
+    mask[1, 1] = 0
     board = read_input_file(input_name, chunk_size)
-    final_board = prepare_next_board(n, new_board, mask)
+    # new_board = board.compute()
+    final_board = play_game(board, n)
     write_output_file(output_name, final_board)
     client.shutdown()
           
-def read_input_file(input_file):
+def read_input_file(input_file, chunk_size):
     # initialize board
     with open(input_file) as f:
         w, h = [int(x) for x in next(f).split()]
@@ -57,26 +62,30 @@ def write_output_file(output, board):
         f.write(str(cell[0])+ " "+ str(cell[1])+ "\n")
     f.close()
     
-def process_cell(board_chunk, block_id=None):
-    width, height = board_chunk.shape
-    #based on the index of chunks
-    start_width = block_id[0] * width
-    start_height = block_id[1] * height
-    board_slice = board[start_width:(start_width + width), start_height:(start_height + height)].compute()
+def neighbors_number(board, row, col):
+    # add plus two to create a proper iteration
+    neighbors = board[max(0, row-1):min(board.shape[0], row+2), max(0, col-1):min(board.shape[1], col+2)]
+    return np.sum(neighbors) - board[row, col]
 
-    # Apply the rules of the game.
-    board_chunk[np.logical_or(board_chunk < 2, board_chunk > 3)] = 0
-    board_chunk[board_chunk == 3] = 1
-    # cell with two neighbours stay the same
-    board_chunk[board_chunk == 2] = board_slice[board_chunk == 2]
-    return board_chunk
+def tick(board):
+    # the copy takes a lot of space
+    w, h = board.shape
+    new_board = np.zeros((w, h),dtype=np.uint8)
+    for r in range(w):
+        for c in range(h):
+            #for dead cell
+            if board[r][c] == 0 and neighbors_number(board, r, c) == 3:
+                new_board[r][c] = 1
+            #for alive cell
+            if board[r][c] == 1 and (neighbors_number(board, r, c) < 2 or neighbors_number(board, r, c) > 3):
+                new_board[r][c] = 0
+    return new_board
 
-def prepare_next_board(steps, board, mask):
-    for _ in range(steps):
-        # use the convolution
-        num_live_neighbors = board.map_overlap(convolve, depth=1, boundary='none', weights=mask, mode='constant', cval=0)
-        board = num_live_neighbors.map_blocks(process_cell, dtype=np.uint8)
-    return board
+def play_game(dask_board, iterations):
+    for i in range(iterations):
+        dask_board = dask_board.map_overlap(tick, depth=1, boundary='none')
+    final_board = dask_board.compute()
+    return final_board
 
                            
 if __name__ == "__main__":
