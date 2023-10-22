@@ -30,14 +30,25 @@ The Initial living cells will be read from the text file
 * Get input file name and no of generations as arguments
 * Load initial pattern of the grid from the input file
 * **For Dask implementation** - the grid will be splitted into a number of Dask Array and function will be used (**Map_Overlay**)   to share an identical block between splitted grids.  
-* Aply the rules for the no of generations
+* Aply the rules for the number of generations
 * Store the final grid in the output file
 
 ## Script Implementation Guideline
 To explore several benchmarks for grids, we have applied several scripts for this task. Some srcipts are in Python text file and some are in Jupyter Notebook.
 * **Jupyter Notebook** - Change the input and output file directory and put number of generations.
-* **Python Files for Dask** - To run python files you can follow (<file.py> Input name with directory> Output name and Saving Directory> number of iterations> Chunk Size) this in your terminal
-* **Python Files Without Dask** - To run python files you can follow ((<file.py> Input name with directory> Output name and Saving Directory> number of iterations) this in your terminal
+* **Python Files for Dask** - To run python files you can follow:
+```
+py Executables/gameDask.py <path to your input> <path to your output> <no of iterations> <chunk_size (chunks are square)>
+```
+for convolution
+```
+py Executables/convolution.py <path to your input> <path to your output> <no of iterations> <chunk_size (chunks are square)>
+```
+* **Python Files Without Dask** - To run python files you can follow:
+```
+py Executables/game.py <path to your input> <path to your output> <no of iterations>
+```
+((<file.py> Input name with directory> Output name and Saving Directory> number of iterations) this in your terminal
 
 ## Files and Folder Description
 * **Data** - Contains the data used for the input
